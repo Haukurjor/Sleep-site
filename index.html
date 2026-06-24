@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleep Cycle Calculator: Best Time to Sleep & Wake Up by Age</title>
+<meta name="description" content="Free sleep cycle calculator. Find the best time to go to bed or wake up using 90-minute cycles, plus science-backed sleep and nap recommendations by age — adults, teens, and kids.">
+
+<!-- Replace yoursleepsite.com with your real domain once you have one -->
+<link rel="canonical" href="https://yoursleepsite.com/">
+
+<!-- Open Graph (Facebook, LinkedIn, iMessage, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sleep Cycle Calculator: Best Time to Sleep & Wake Up by Age">
+<meta property="og:description" content="Find the best time to go to bed or wake up using 90-minute sleep cycles, plus recommended sleep and nap times by age.">
+<meta property="og:url" content="https://yoursleepsite.com/">
+<!-- Optional: add a 1200x630 share image and uncomment -->
+<!-- <meta property="og:image" content="https://yoursleepsite.com/share.png"> -->
+
+<!-- Twitter / X card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Sleep Cycle Calculator: Best Time to Sleep & Wake Up by Age">
+<meta name="twitter:description" content="Find the best time to go to bed or wake up using 90-minute sleep cycles, plus recommended sleep and nap times by age.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fff8f3;--card:#ffffff;--ink:#33263f;--muted:#94889e;--line:#f0e3e6;
+    --rose:#f56b8a;--rose-deep:#e0466b;--lav:#8a78e0;--lav-wash:#f2effc;
+    --peach:#ffd9b0;--gold:#ffe6a8;--best-wash:#fff2f5;
+    --shadow:0 24px 60px -28px rgba(120,60,90,.30);
+    --shadow-sm:0 8px 24px -14px rgba(120,60,90,.25);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Figtree',system-ui,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(90% 60% at 50% 0%, var(--gold) 0%, transparent 60%),
+      radial-gradient(120% 80% at 50% -5%, var(--peach) 0%, transparent 55%),
+      linear-gradient(180deg,#fff3ea 0%, var(--paper) 40%);
+    background-attachment:fixed;min-height:100vh;line-height:1.55;
+    padding:clamp(24px,5vw,72px) 20px 64px;
+  }
+  .wrap{max-width:680px;margin:0 auto}
+  .hero{position:relative;text-align:center;margin-bottom:40px}
+  .sun{width:128px;height:64px;margin:0 auto 22px;position:relative;overflow:hidden}
+  .sun::before{content:"";position:absolute;left:50%;bottom:0;width:104px;height:104px;
+    transform:translateX(-50%);border-radius:50%;
+    background:radial-gradient(circle at 50% 60%, #ffd36b 0%, var(--rose) 70%, var(--rose-deep) 100%);
+    box-shadow:0 0 40px 6px rgba(245,107,138,.35)}
+  .ray{position:absolute;left:50%;bottom:0;width:2px;height:30px;
+    background:linear-gradient(var(--rose),transparent);transform-origin:bottom center;opacity:.5}
+  .eyebrow{font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--lav);font-weight:600;margin-bottom:14px}
+  h1{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:clamp(2.2rem,7vw,3.5rem);
+    line-height:1.02;letter-spacing:-.02em;margin-bottom:16px}
+  h1 .accent{background:linear-gradient(100deg,var(--rose),var(--lav));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:1.04rem;max-width:46ch;margin:0 auto}
+
+  .modes{display:flex;background:var(--card);border:1px solid var(--line);border-radius:100px;
+    padding:5px;gap:4px;margin:0 auto 16px;width:fit-content;box-shadow:var(--shadow-sm)}
+  .modes button{font:inherit;font-weight:600;font-size:.9rem;color:var(--muted);background:none;
+    border:none;cursor:pointer;border-radius:100px;padding:11px 20px;transition:color .2s,background .2s;white-space:nowrap}
+  .modes button[aria-pressed="true"]{background:linear-gradient(100deg,var(--rose),var(--rose-deep));
+    color:#fff;box-shadow:0 6px 16px -8px var(--rose-deep)}
+  .modes button:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:26px;
+    padding:clamp(22px,4vw,32px);box-shadow:var(--shadow)}
+
+  .age-block{margin-bottom:18px}
+  .age-label{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    font-weight:600;text-align:center;margin-bottom:10px}
+  .ages{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .ages button{font:inherit;font-weight:600;font-size:.86rem;color:var(--muted);
+    background:var(--paper);border:1.5px solid var(--line);cursor:pointer;border-radius:100px;
+    padding:9px 16px;transition:all .18s}
+  .ages button[aria-pressed="true"]{color:var(--lav);border-color:var(--lav);background:var(--lav-wash)}
+  .ages button:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+
+  .kid-pick{margin-bottom:18px}
+  .kid-pick label{display:block;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;text-align:center;margin-bottom:8px}
+  .kid-pick select{font:inherit;font-weight:600;font-size:1rem;color:var(--ink);
+    background:var(--paper);border:1.5px solid var(--line);border-radius:14px;
+    padding:12px 16px;width:100%;cursor:pointer;text-align:center;text-align-last:center}
+  .kid-pick select:focus-visible{outline:2px solid var(--lav);outline-offset:2px;border-color:var(--lav)}
+
+  .science{display:flex;gap:12px;align-items:flex-start;background:var(--lav-wash);
+    border:1px solid #e7e0fb;border-radius:16px;padding:14px 16px;margin-bottom:22px}
+  .science .ic{flex-shrink:0;width:30px;height:30px;border-radius:50%;
+    background:var(--lav);color:#fff;display:grid;place-items:center;font-weight:700;font-size:.95rem}
+  .science .body{font-size:.9rem;line-height:1.5}
+  .science .body b{color:var(--ink);font-weight:700}
+  .science .src{display:block;color:var(--muted);font-size:.76rem;margin-top:4px}
+
+  .ask{font-size:1.06rem;font-weight:600;margin-bottom:16px;text-align:center}
+  .ask span{color:var(--rose)}
+  .control{display:flex;flex-wrap:wrap;gap:12px}
+  input[type="time"]{font-family:'Bricolage Grotesque',sans-serif;font-size:1.7rem;font-weight:600;
+    background:var(--paper);color:var(--ink);border:1.5px solid var(--line);border-radius:16px;
+    padding:14px 18px;flex:1;min-width:150px;text-align:center}
+  input[type="time"]:focus-visible{outline:2px solid var(--rose);outline-offset:2px;border-color:var(--rose)}
+  .go{font:inherit;font-weight:600;font-size:1rem;cursor:pointer;color:#fff;
+    background:linear-gradient(100deg,var(--rose),var(--rose-deep));border:none;border-radius:16px;
+    padding:16px 26px;box-shadow:0 10px 24px -12px var(--rose-deep);transition:transform .15s,filter .2s}
+  .go:hover{filter:brightness(1.04)}
+  .go:active{transform:translateY(1px)}
+  .go:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+  .now-link{display:block;margin:14px auto 0;background:none;border:none;color:var(--lav);
+    font:inherit;font-size:.9rem;font-weight:500;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .now-link:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+
+  .results{margin-top:30px}
+  .results-head{font-size:.92rem;color:var(--muted);font-weight:500;text-align:center;margin-bottom:18px}
+  .results-head b{color:var(--ink);font-weight:700}
+  .row{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:18px;
+    border:1.5px solid var(--line);background:var(--card);margin-bottom:10px;transition:transform .15s,border-color .2s}
+  .row:hover{transform:translateY(-2px);border-color:var(--peach)}
+  .row.best{border-color:var(--rose);background:var(--best-wash)}
+  .time{font-family:'Bricolage Grotesque',sans-serif;font-size:1.55rem;font-weight:700;min-width:120px}
+  .row.best .time{color:var(--rose-deep)}
+  .meta{color:var(--muted);font-size:.9rem;flex:1}
+  .meta b{color:var(--ink);font-weight:600}
+  .tag{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#fff;
+    background:linear-gradient(100deg,var(--rose),var(--rose-deep));padding:5px 11px;border-radius:100px;white-space:nowrap}
+  .note{color:var(--muted);font-size:.86rem;margin-top:18px;text-align:center;line-height:1.6}
+  .note b{color:var(--rose-deep);font-weight:600}
+
+  .nap-panel{text-align:center;padding:8px 4px 4px}
+  .nap-big{font-family:'Bricolage Grotesque',sans-serif;font-size:2.4rem;font-weight:700;
+    background:linear-gradient(100deg,var(--rose),var(--lav));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nap-big small{display:block;font-family:'Figtree';font-size:.8rem;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+  .nap-plan{margin:20px auto 0;max-width:400px;text-align:left;background:var(--paper);
+    border:1px solid var(--line);border-radius:16px;padding:6px 18px 10px}
+  .nap-plan-title{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--lav);
+    font-weight:700;padding:12px 0 4px}
+  .plan-row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;
+    border-top:1px solid var(--line);font-size:.9rem}
+  .plan-row .k{color:var(--muted);flex-shrink:0}
+  .plan-row .v{color:var(--ink);font-weight:600;text-align:right}
+  .nap-note{color:var(--muted);font-size:.86rem;max-width:42ch;margin:16px auto 0;line-height:1.6}
+  .nap-note b{color:var(--ink);font-weight:600}
+
+  .promo{margin-top:26px;padding:18px 20px;border-radius:18px;
+    background:linear-gradient(110deg,#fff4ec,#fdeef4);border:1px solid var(--line);
+    display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .promo .em{font-size:1.7rem;line-height:1}
+  .promo .txt{flex:1;min-width:180px}
+  .promo .txt strong{font-weight:700}
+  .promo .txt span{display:block;color:var(--muted);font-size:.86rem;margin-top:2px}
+  .promo a{background:var(--ink);color:#fff;font-weight:600;text-decoration:none;font-size:.9rem;
+    padding:11px 18px;border-radius:100px;white-space:nowrap;transition:transform .15s}
+  .promo a:hover{transform:translateY(-1px)}
+  .promo a:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+
+  footer{margin-top:38px;color:var(--muted);font-size:.78rem;text-align:center;line-height:1.7}
+  .disclosure{display:block;margin-top:10px;font-size:.74rem;opacity:.85}
+  .hidden{display:none}
+  @media (max-width:540px){
+    .time{min-width:0;font-size:1.4rem}.row{flex-wrap:wrap;gap:6px}.meta{flex-basis:100%}
+    .modes{width:100%}.modes button{flex:1;padding:11px 8px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* SEO content / FAQ */
+  .content{max-width:680px;margin:48px auto 0;padding:0 4px}
+  .content h2{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.5rem;
+    letter-spacing:-.01em;margin:0 0 14px}
+  .content p{color:var(--ink);font-size:1rem;line-height:1.7;margin:0 0 14px}
+  .content p.lead{color:var(--muted)}
+  .faq{margin-top:32px}
+  .faq details{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:2px 20px;margin-bottom:10px;box-shadow:var(--shadow-sm)}
+  .faq summary{font-weight:600;font-size:1rem;cursor:pointer;list-style:none;
+    padding:16px 0;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";color:var(--rose);font-size:1.4rem;font-weight:400;line-height:1;transition:transform .2s}
+  .faq details[open] summary::after{transform:rotate(45deg)}
+  .faq summary:focus-visible{outline:2px solid var(--lav);outline-offset:4px;border-radius:6px}
+  .faq .a{color:var(--muted);line-height:1.7;padding:0 0 18px;font-size:.96rem}
+  .faq .a b{color:var(--ink);font-weight:600}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <div class="sun" id="sun" aria-hidden="true"></div>
+    <p class="eyebrow">Sleep cycle calculator</p>
+    <h1>Wake up on the <span class="accent">right side</span> of a cycle.</h1>
+    <p class="sub">Sleep runs in ~90-minute cycles. Waking at the end of one feels easy; waking mid-cycle is what leaves you groggy. Pick a time below and find the moments that line up.</p>
+  </div>
+
+  <div class="modes" role="group" aria-label="What do you want to calculate?">
+    <button id="modeWake" aria-pressed="true">I want to wake up at…</button>
+    <button id="modeBed" aria-pressed="false">I'm going to bed now</button>
+  </div>
+
+  <div class="card">
+    <div class="age-block">
+      <p class="age-label">Who is this for?</p>
+      <div class="ages" role="group" aria-label="Age group">
+        <button data-age="kids" aria-pressed="false">Kids</button>
+        <button data-age="teen" aria-pressed="false">Teen · 14–17</button>
+        <button data-age="adult" aria-pressed="true">Adult · 18–64</button>
+        <button data-age="older" aria-pressed="false">65+</button>
+      </div>
+    </div>
+
+    <div class="kid-pick hidden" id="kidPick">
+      <label for="childAge">Child's age</label>
+      <select id="childAge">
+        <option value="newborn">0–3 months</option>
+        <option value="infant">4–11 months</option>
+        <option value="toddler">1 year</option>
+        <option value="toddler">2 years</option>
+        <option value="preschool">3 years</option>
+        <option value="preschool">4 years</option>
+        <option value="preschool">5 years</option>
+        <option value="school" selected>6 years</option>
+        <option value="school">7 years</option>
+        <option value="school">8 years</option>
+        <option value="school">9 years</option>
+        <option value="school">10 years</option>
+        <option value="school">11 years</option>
+        <option value="school">12 years</option>
+        <option value="school">13 years</option>
+      </select>
+    </div>
+
+    <div class="science">
+      <span class="ic" aria-hidden="true">✓</span>
+      <p class="body">
+        <span id="scienceMain"></span>
+        <span class="src" id="scienceSrc">Source: National Sleep Foundation, age-based duration guidelines (expert panel of 18, 312 studies reviewed).</span>
+      </p>
+    </div>
+
+    <div id="planner">
+      <p class="ask" id="askText">I want to wake up at <span>…</span></p>
+      <div class="control">
+        <input type="time" id="timeInput" value="07:00" aria-label="Target time">
+        <button class="go" id="goBtn">Show me bedtimes</button>
+      </div>
+      <button class="now-link" id="nowLink">Use the current time instead</button>
+
+      <div class="results hidden" id="results" aria-live="polite">
+        <p class="results-head" id="resultsHead"></p>
+        <div id="rows"></div>
+        <p class="note" id="noteText"></p>
+      </div>
+    </div>
+
+    <div id="napPanel" class="nap-panel hidden" aria-live="polite">
+      <div class="nap-big" id="napHours"></div>
+      <div class="nap-plan">
+        <p class="nap-plan-title">Typical nap plan</p>
+        <div class="plan-row"><span class="k">Naps</span><span class="v" id="planNaps"></span></div>
+        <div class="plan-row"><span class="k">Day sleep</span><span class="v" id="planLength"></span></div>
+        <div class="plan-row"><span class="k">Timing</span><span class="v" id="planTiming"></span></div>
+      </div>
+      <p class="nap-note" id="napNote"></p>
+    </div>
+
+    <!-- ===== MONETIZATION SLOT (age-appropriate sleep gear) =====
+         Each link points at an Amazon search/category page. Amazon's cookie is universal,
+         so a click earns on whatever the visitor buys in the next 24 hrs — the exact product
+         doesn't matter. Replace YOUR-TAG-HERE with your Amazon Associates tracking ID. -->
+    <div class="promo" id="promo">
+      <span class="em" id="promoEmoji">😴</span>
+      <div class="txt">
+        <strong id="promoTitle"></strong>
+        <span id="promoSub"></span>
+      </div>
+      <a id="promoLink" href="#" rel="sponsored nofollow" target="_blank"></a>
+    </div>
+  </div>
+
+  <section class="content">
+    <h2>How sleep cycles work</h2>
+    <p class="lead">Sleep isn't one flat state. Through the night your brain repeats cycles of about 90 minutes, each climbing from light sleep down into slow-wave deep sleep and back up into REM, where most dreaming happens. A typical night holds four to six of these in a row.</p>
+    <p>The trick to waking up clear-headed is timing your alarm for the <em>end</em> of a cycle rather than the middle of one. Wake during deep sleep and you get that heavy, foggy feeling; wake as a cycle finishes and the same morning feels easy — sometimes even on slightly less total sleep. That's the timing this calculator works out for you, and why the recommended options are built around whole cycles rather than a flat "8 hours."</p>
+
+    <div class="faq">
+      <h2>Common questions</h2>
+
+      <details>
+        <summary>How long is one sleep cycle?</summary>
+        <div class="a">A full sleep cycle lasts about <b>90 minutes</b>, moving from light sleep into deep sleep and then REM. Most people go through four to six cycles a night, and the cycles aren't identical — deep sleep dominates early in the night, while REM stretches get longer toward morning.</div>
+      </details>
+
+      <details>
+        <summary>Why do I wake up groggy even after a full night?</summary>
+        <div class="a">That heavy, foggy feeling is called <b>sleep inertia</b>, and it usually means your alarm went off in the middle of a cycle — often during deep sleep. Waking at the end of a cycle, when sleep is lightest, tends to feel much easier, even if it means slightly less total time in bed.</div>
+      </details>
+
+      <details>
+        <summary>What is the best time to go to bed?</summary>
+        <div class="a">Work backwards from when you need to wake up: count back in 90-minute blocks and add roughly 15 minutes to fall asleep. <b>Five to six cycles — about 7.5 to 9 hours — suits most adults.</b> Enter your wake time above and the calculator lists the bedtimes that land on a cycle boundary.</div>
+      </details>
+
+      <details>
+        <summary>How much sleep do adults need?</summary>
+        <div class="a">The National Sleep Foundation recommends <b>7 to 9 hours</b> a night for adults aged 18 to 64, and 7 to 8 hours for adults 65 and older — roughly five to six full sleep cycles.</div>
+      </details>
+
+      <details>
+        <summary>How much sleep do teenagers need?</summary>
+        <div class="a">Teens aged 14 to 17 need <b>8 to 10 hours</b> — more than adults — because their bodies and brains are still developing and their internal clocks naturally shift later, making early starts harder.</div>
+      </details>
+
+      <details>
+        <summary>How much sleep does my child need?</summary>
+        <div class="a">It changes quickly with age: newborns need <b>14–17 hours</b>, infants 12–15, toddlers 11–14, preschoolers 10–13, and school-age children 9–11 hours. For children under six, a large share of that comes from daytime naps rather than night sleep alone.</div>
+      </details>
+
+      <details>
+        <summary>Does this work for babies and toddlers?</summary>
+        <div class="a">For babies and young children the bedtime planner isn't shown, because their sleep is shorter-cycled and spread across naps. Instead you'll see the recommended daily total and a typical nap plan. The 90-minute cycle planner applies from <b>about age six</b> up. For a young child's actual schedule, your pediatrician is the best guide.</div>
+      </details>
+
+      <details>
+        <summary>Is melatonin safe for children?</summary>
+        <div class="a">Melatonin is generally <b>discouraged for young children</b> and should only be considered for older kids under a doctor's guidance. It's sold as an unregulated supplement with inconsistent dosing, and accidental pediatric ingestions have risen sharply in recent years. Consistent routines and behavioral approaches come first.</div>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    Sleep cycles are ~90 min; durations from the National Sleep Foundation, nap guidance from pediatric sources. A guide, not medical advice.
+    <span class="disclosure">As an Amazon Associate, this site earns from qualifying purchases.</span>
+    <span class="disclosure"><a href="/privacy.html" style="color:var(--lav);text-decoration:none">Privacy Policy</a> · <a href="/terms.html" style="color:var(--lav);text-decoration:none">Terms &amp; Disclaimer</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var FALL_ASLEEP=14, CYCLE=90, mode='wake', group='adult', TAG='YOUR-TAG-HERE';
+  function search(q){return 'https://www.amazon.com/s?k='+encodeURIComponent(q)+'&tag='+TAG;}
+  var MELATONIN='https://www.amazon.com/Best-Sellers-Health-Personal-Care-76196-Melatonin/zgbs/hpc/3773891?tag='+TAG;
+
+  // No melatonin is promoted to anyone under 18 (pediatric/adolescent caution).
+  var GROUPS={
+    teen: {label:'teens (14–17)',  hours:'8–10 hours', show:[6,5,4,3], rec:[6],   cycles:'about 6 cycles',
+      gear:{em:'⏰', title:'Hard to wake for school?', sub:'A sunrise wake-up light eases dark-morning starts.', cta:'Wake-up lights →', url:search('wake up light alarm clock')}},
+    adult:{label:'adults (18–64)', hours:'7–9 hours',  show:[6,5,4,3], rec:[5,6], cycles:'about 5–6 cycles',
+      gear:{em:'😴', title:'Timing right, still restless?', sub:'A little melatonin can help when your schedule\u2019s off.', cta:'Best-selling melatonin →', url:MELATONIN}},
+    older:{label:'adults 65+',     hours:'7–8 hours',  show:[6,5,4,3], rec:[5],   cycles:'about 5 cycles',
+      gear:{em:'😴', title:'Timing right, still restless?', sub:'A little melatonin can help when your schedule\u2019s off.', cta:'Best-selling melatonin →', url:MELATONIN}}
+  };
+  var KIDS={
+    newborn:{label:'newborns (0–3 months)', hours:'14–17 hours', nap:true,
+      plan:{naps:'4+ naps, day & night', length:'30 min – 3 hrs each', timing:'Sleep after ~45–60 min awake'},
+      gear:{em:'🔊', title:'Help a newborn settle', sub:'Steady white noise mimics the womb and soothes fussing.', cta:'Baby sound machines →', url:search('baby white noise machine')}},
+    infant:{label:'infants (4–11 months)', hours:'12–15 hours', nap:true,
+      plan:{naps:'2–3 naps (drop the 3rd ~8–9 mo)', length:'≈ 2.5–4 hrs total', timing:'Mid-morning + early afternoon'},
+      gear:{em:'🛌', title:'Cozy, safe sleep', sub:'A wearable sleep sack keeps babies warm without loose blankets.', cta:'Baby sleep sacks →', url:search('baby sleep sack')}},
+    toddler:{label:'toddlers (1–2 years)', hours:'11–14 hours', nap:true,
+      plan:{naps:'1 nap (2nd drops ~15–18 mo)', length:'1.5 – 3 hrs', timing:'Early afternoon, well before bed'},
+      gear:{em:'🌚', title:'Darker room, better naps', sub:'Blackout curtains help toddlers settle for daytime sleep.', cta:'Blackout curtains →', url:search('blackout curtains nursery')}},
+    preschool:{label:'preschoolers (3–5 years)', hours:'10–13 hours', nap:true,
+      plan:{naps:'1 nap or quiet time', length:'About 1 hr (fades by ~age 5)', timing:'Early afternoon — not after 3–4 pm'},
+      gear:{em:'🐰', title:'Stay in bed till morning', sub:'An OK-to-wake clock shows little ones when it\u2019s time to get up.', cta:'OK-to-wake clocks →', url:search('ok to wake toddler clock')}},
+    school:{label:'school-age kids (6–13 years)', hours:'9–11 hours', nap:false, show:[7,6,5,4], rec:[6,7], cycles:'about 6–7 cycles',
+      gear:{em:'⏰', title:'Easier school mornings', sub:'A kid-friendly sunrise alarm wakes them gently.', cta:'Kids alarm clocks →', url:search('kids sunrise alarm clock')}}
+  };
+
+  var $=function(id){return document.getElementById(id)};
+  var modeWake=$('modeWake'),modeBed=$('modeBed'),askText=$('askText'),
+      timeInput=$('timeInput'),goBtn=$('goBtn'),nowLink=$('nowLink'),
+      results=$('results'),resultsHead=$('resultsHead'),rows=$('rows'),noteText=$('noteText'),
+      scienceMain=$('scienceMain'),scienceSrc=$('scienceSrc'),ageBtns=document.querySelectorAll('.ages button'),
+      kidPick=$('kidPick'),childAge=$('childAge'),planner=$('planner'),
+      napPanel=$('napPanel'),napHours=$('napHours'),napNote=$('napNote'),
+      planNaps=$('planNaps'),planLength=$('planLength'),planTiming=$('planTiming'),
+      promoEmoji=$('promoEmoji'),promoTitle=$('promoTitle'),promoSub=$('promoSub'),promoLink=$('promoLink');
+
+  var sun=$('sun');
+  for(var i=0;i<7;i++){var r=document.createElement('span');r.className='ray';
+    r.style.transform='translateX(-50%) rotate('+((i-3)*26)+'deg)';sun.appendChild(r)}
+
+  function fmt(d){var h=d.getHours(),m=d.getMinutes(),ap=h>=12?'PM':'AM',hh=h%12;if(hh===0)hh=12;return hh+':'+(m<10?'0':'')+m+' '+ap}
+  function parse(v){var p=v.split(':'),d=new Date();d.setHours(+p[0],+p[1],0,0);return d}
+  function addMin(d,min){return new Date(d.getTime()+min*60000)}
+
+  function current(){ return group==='kids' ? KIDS[childAge.value] : GROUPS[group]; }
+
+  function renderPromo(d){
+    var g=d.gear;
+    promoEmoji.textContent=g.em;
+    promoTitle.textContent=g.title;
+    promoSub.textContent=g.sub;
+    promoLink.textContent=g.cta;
+    promoLink.href=g.url;
+  }
+
+  function render(){
+    ageBtns.forEach(function(b){b.setAttribute('aria-pressed', b.getAttribute('data-age')===group)});
+    kidPick.classList.toggle('hidden', group!=='kids');
+
+    var d=current();
+    var usePlanner = (group!=='kids') || !d.nap;
+
+    if(usePlanner){
+      scienceMain.innerHTML='For <b>'+d.label+'</b>, the recommended sleep is <b>'+d.hours+
+        '</b> a night — '+d.cycles+'. Those are highlighted below.';
+      scienceSrc.textContent='Source: National Sleep Foundation, age-based duration guidelines (expert panel of 18, 312 studies reviewed).';
+    } else {
+      scienceMain.innerHTML='For <b>'+d.label+'</b>, the recommended sleep is <b>'+d.hours+'</b> a day, naps included.';
+      scienceSrc.textContent='Sources: National Sleep Foundation (totals); Mayo Clinic & Nemours KidsHealth (nap guidance).';
+    }
+
+    planner.classList.toggle('hidden', !usePlanner);
+    napPanel.classList.toggle('hidden', usePlanner);
+
+    if(usePlanner){
+      if(!results.classList.contains('hidden')) calc();
+    } else {
+      napHours.innerHTML=d.hours+'<small>recommended per day</small>';
+      planNaps.textContent=d.plan.naps;
+      planLength.textContent=d.plan.length;
+      planTiming.textContent=d.plan.timing;
+      napNote.innerHTML='Naps shift fast at this age and every child differs — treat this as a starting point, '+
+        'and let your pediatrician guide the real schedule.';
+    }
+
+    renderPromo(d);
+  }
+
+  function setMode(m){
+    mode=m;var isWake=m==='wake';
+    modeWake.setAttribute('aria-pressed',isWake);
+    modeBed.setAttribute('aria-pressed',!isWake);
+    askText.innerHTML=isWake?'I want to wake up at <span>…</span>':"I'll fall asleep at <span>…</span>";
+    goBtn.textContent=isWake?'Show me bedtimes':'Show me wake-up times';
+    results.classList.add('hidden');
+  }
+
+  function calc(){
+    var d=current(); if(!d.show) return;
+    var base=parse(timeInput.value),rec=d.rec;rows.innerHTML='';
+    d.show.forEach(function(c){
+      var total=c*CYCLE,t;
+      if(mode==='wake'){t=addMin(base,-(total+FALL_ASLEEP));}
+      else{t=addMin(base,FALL_ASLEEP+total);}
+      var best=rec.indexOf(c)!==-1,hrs=total/60;
+      var row=document.createElement('div');row.className='row'+(best?' best':'');
+      row.innerHTML='<span class="time">'+fmt(t)+'</span>'+
+        '<span class="meta"><b>'+c+' cycles</b> · '+hrs+' hrs of sleep</span>'+
+        (best?'<span class="tag">Recommended</span>':'');
+      rows.appendChild(row);
+    });
+    resultsHead.innerHTML=mode==='wake'
+      ?'To wake at <b>'+fmt(base)+'</b>, head to bed at one of these:'
+      :'Asleep by <b>'+fmt(base)+'</b>, set your alarm for one of these:';
+    noteText.innerHTML='Highlighted times match the science-backed range for this age. '+
+      'Shorter options are fine occasionally, not as a habit.';
+    results.classList.remove('hidden');
+  }
+
+  modeWake.addEventListener('click',function(){setMode('wake')});
+  modeBed.addEventListener('click',function(){setMode('bed')});
+  ageBtns.forEach(function(b){b.addEventListener('click',function(){group=b.getAttribute('data-age');render()})});
+  childAge.addEventListener('change',render);
+  goBtn.addEventListener('click',calc);
+  timeInput.addEventListener('keydown',function(e){if(e.key==='Enter')calc()});
+  nowLink.addEventListener('click',function(){
+    var n=new Date();
+    timeInput.value=(n.getHours()<10?'0':'')+n.getHours()+':'+(n.getMinutes()<10?'0':'')+n.getMinutes();
+    calc();
+  });
+
+  render();
+})();
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "Sleep Cycle Calculator",
+      "applicationCategory": "HealthApplication",
+      "operatingSystem": "Any (web browser)",
+      "description": "Find the best time to go to bed or wake up using 90-minute sleep cycles, with science-backed sleep and nap recommendations by age.",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How long is one sleep cycle?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A full sleep cycle lasts about 90 minutes, moving from light sleep into deep sleep and then REM. Most people go through four to six cycles a night, with deep sleep dominating early and REM stretches lengthening toward morning." } },
+        { "@type": "Question", "name": "Why do I wake up groggy even after a full night?",
+          "acceptedAnswer": { "@type": "Answer", "text": "That foggy feeling is called sleep inertia, and it usually means your alarm went off in the middle of a cycle, often during deep sleep. Waking at the end of a cycle, when sleep is lightest, tends to feel much easier even on slightly less total sleep." } },
+        { "@type": "Question", "name": "What is the best time to go to bed?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Work backwards from your wake time: count back in 90-minute blocks and add about 15 minutes to fall asleep. Five to six cycles, about 7.5 to 9 hours, suits most adults." } },
+        { "@type": "Question", "name": "How much sleep do adults need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The National Sleep Foundation recommends 7 to 9 hours a night for adults aged 18 to 64, and 7 to 8 hours for adults 65 and older, roughly five to six full sleep cycles." } },
+        { "@type": "Question", "name": "How much sleep do teenagers need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Teens aged 14 to 17 need 8 to 10 hours, more than adults, because their bodies and brains are still developing and their internal clocks naturally shift later." } },
+        { "@type": "Question", "name": "How much sleep does my child need?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Newborns need 14 to 17 hours, infants 12 to 15, toddlers 11 to 14, preschoolers 10 to 13, and school-age children 9 to 11 hours. For children under six, much of that comes from daytime naps." } },
+        { "@type": "Question", "name": "Does this work for babies and toddlers?",
+          "acceptedAnswer": { "@type": "Answer", "text": "For babies and young children the bedtime planner isn't shown, because their sleep is shorter-cycled and spread across naps. You'll see the recommended daily total and a typical nap plan instead. The 90-minute cycle planner applies from about age six up." } },
+        { "@type": "Question", "name": "Is melatonin safe for children?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Melatonin is generally discouraged for young children and should only be considered for older kids under a doctor's guidance. It is an unregulated supplement with inconsistent dosing, and accidental pediatric ingestions have risen sharply. Consistent routines come first." } }
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

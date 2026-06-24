@@ -22,6 +22,15 @@
 <meta name="twitter:title" content="Sleep Cycle Calculator: Best Time to Sleep & Wake Up by Age">
 <meta name="twitter:description" content="Find the best time to go to bed or wake up using 90-minute sleep cycles, plus recommended sleep and nap times by age.">
 
+<!-- PWA / installable app -->
+<meta name="theme-color" content="#f56b8a">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sleep Calc">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
@@ -183,6 +192,15 @@
   .faq summary:focus-visible{outline:2px solid var(--lav);outline-offset:4px;border-radius:6px}
   .faq .a{color:var(--muted);line-height:1.7;padding:0 0 18px;font-size:.96rem}
   .faq .a b{color:var(--ink);font-weight:600}
+
+  /* PWA install button */
+  #installBtn{position:fixed;right:18px;bottom:18px;z-index:50;display:none;
+    align-items:center;gap:8px;font-family:'Figtree',sans-serif;font-weight:600;font-size:.92rem;
+    color:#fff;background:linear-gradient(100deg,var(--rose),var(--rose-deep));border:none;cursor:pointer;
+    border-radius:100px;padding:13px 20px;box-shadow:0 12px 28px -10px var(--rose-deep)}
+  #installBtn:hover{filter:brightness(1.05)}
+  #installBtn:focus-visible{outline:2px solid var(--lav);outline-offset:2px}
+  @media (max-width:540px){#installBtn{right:12px;bottom:12px}}
 </style>
 </head>
 <body>
@@ -511,6 +529,37 @@
     }
   ]
 }
+</script>
+<button id="installBtn" aria-label="Install this app">⬇ Install app</button>
+
+<script>
+// --- PWA: register service worker ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function(){ /* ignore */ });
+  });
+}
+// --- PWA: custom install button ---
+(function () {
+  var deferred = null;
+  var btn = document.getElementById('installBtn');
+  window.addEventListener('beforeinstallprompt', function (e) {
+    e.preventDefault();
+    deferred = e;
+    btn.style.display = 'inline-flex';
+  });
+  btn.addEventListener('click', function () {
+    if (!deferred) return;
+    deferred.prompt();
+    deferred.userChoice.finally(function () {
+      deferred = null;
+      btn.style.display = 'none';
+    });
+  });
+  window.addEventListener('appinstalled', function () {
+    btn.style.display = 'none';
+  });
+})();
 </script>
 </body>
 </html>
